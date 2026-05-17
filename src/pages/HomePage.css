@@ -1,0 +1,83 @@
+.home-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.home-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.home-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 4rem 0;
+  color: var(--color-text-muted);
+}
+
+.deck-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.deck-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.deck-card:hover {
+  border-color: var(--color-primary);
+}
+
+.deck-card-colors {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.color-red    { background: var(--color-red); }
+.color-blue   { background: var(--color-blue); }
+.color-green  { background: var(--color-green); }
+.color-purple { background: var(--color-purple); }
+.color-black  { background: var(--color-black); }
+.color-yellow { background: var(--color-yellow); }
+
+.deck-card-name {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.deck-card-count {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  flex: 1;
+}
+
+.deck-card-delete {
+  font-size: 0.8rem;
+  color: var(--color-red);
+  text-align: left;
+  padding: 0;
+  margin-top: 0.25rem;
+}
+
+.deck-card-delete:hover {
+  text-decoration: underline;
+}
