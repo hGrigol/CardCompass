@@ -82,36 +82,38 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 0 0.5rem 0.75rem;
+  gap: 2px;
+  padding: 0 0.35rem 0.5rem;
 }
 
 .sidebar-entry {
   display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.3rem 0.4rem;
+  align-items: stretch;
+  gap: 0.35rem;
+  padding: 0.1rem 0.25rem;
   border-radius: 6px;
   background: var(--color-bg);
 }
 
 .entry-thumb-wrap {
   position: relative;
-  width: 52px;
+  width: 48px;
   flex-shrink: 0;
+  align-self: center;
 }
 
 .entry-thumb {
   width: 100%;
-  aspect-ratio: 5 / 7;
+  aspect-ratio: 5 / 3.8;
   object-fit: cover;
+  object-position: 50% 11%;
   border-radius: 4px;
   display: block;
 }
 
 .entry-thumb-placeholder {
   width: 100%;
-  aspect-ratio: 5 / 7;
+  aspect-ratio: 5 / 3.8;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 4px;
@@ -146,9 +148,39 @@
   white-space: nowrap;
 }
 
-.entry-meta {
-  font-size: 0.7rem;
+.entry-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex-shrink: 0;
+  width: 26px;
+  align-self: center;
+}
+
+.entry-cost-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.entry-cost-circle.color-yellow {
+  color: #1a1a1a;
+}
+
+.entry-stat-power {
+  font-size: 0.62rem;
   color: var(--color-text-muted);
+  font-weight: 500;
+  line-height: 1;
 }
 
 .entry-price {
@@ -167,6 +199,7 @@
   flex-direction: column;
   gap: 2px;
   flex-shrink: 0;
+  align-self: center;
 }
 
 .entry-add,

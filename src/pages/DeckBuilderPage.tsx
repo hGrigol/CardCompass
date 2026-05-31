@@ -98,6 +98,13 @@ export default function DeckBuilderPage() {
 
   const deckCardMap = new Map(deck.cards.map((e) => [e.cardId, e.count]))
 
+  const curveEntries = useMemo(() =>
+    deck.cards.flatMap((e) => {
+      const card = allCards.find((c) => c.id === e.cardId)
+      return card ? [{ card, count: e.count }] : []
+    }),
+  [deck.cards, allCards])
+
   const totalPrice = useMemo(() => {
     let sum = 0
     let hasAny = false
@@ -169,13 +176,6 @@ export default function DeckBuilderPage() {
   if (!deck.leaderId) {
     return <LeaderSelect allCards={allCards} onSelect={setLeader} />
   }
-
-  const curveEntries = useMemo(() =>
-    deck.cards.flatMap((e) => {
-      const card = allCards.find((c) => c.id === e.cardId)
-      return card ? [{ card, count: e.count }] : []
-    }),
-  [deck.cards, allCards])
 
   return (
     <>
@@ -288,6 +288,16 @@ export default function DeckBuilderPage() {
                 onMouseEnter={() => card && setPreview(card)}
                 onMouseLeave={() => setPreview(null)}
               >
+                {card && (
+                  <div className="entry-stats">
+                    {card.cost !== null && (
+                      <span className={`entry-cost-circle color-${card.colors[0] ?? ''}`}>
+                        {card.cost}
+                      </span>
+                    )}
+                    {card.power !== null && <span className="entry-stat-power">{(card.power / 1000).toFixed(0)}k</span>}
+                  </div>
+                )}
                 <div className="entry-thumb-wrap">
                   {card?.imageUrl ? (
                     <img src={card.imageUrl} alt={card.name} className="entry-thumb" />
@@ -298,17 +308,8 @@ export default function DeckBuilderPage() {
                 </div>
                 <div className="entry-info">
                   <span className="entry-name">{card?.name ?? entry.cardId}</span>
-                  {card && (
-                    <>
-                      <span className="entry-meta">
-                        {card.cost !== null ? `${card.cost} Kosten` : ''}
-                        {card.cost !== null && card.power !== null ? ' · ' : ''}
-                        {card.power !== null ? `${card.power} Power` : ''}
-                      </span>
-                      {card.marketPrice != null && (
-                        <span className="entry-price">${card.marketPrice.toFixed(2)}</span>
-                      )}
-                    </>
+                  {card?.marketPrice != null && (
+                    <span className="entry-price">${card.marketPrice.toFixed(2)}</span>
                   )}
                 </div>
                 <div className="entry-actions">
