@@ -70,7 +70,7 @@ export default function DeckBuilderPage() {
   const [query, setQuery] = useState('')
   const [colorFilter, setColorFilter] = useState<CardColor | null>(null)
   const [deckName, setDeckName] = useState(deck.name)
-  const [preview, setPreview] = useState<{ card: Card; rect: DOMRect } | null>(null)
+  const [preview, setPreview] = useState<Card | null>(null)
 
   useEffect(() => {
     fetchAllCards()
@@ -170,6 +170,7 @@ export default function DeckBuilderPage() {
   }
 
   return (
+    <>
     <div className="builder-layout">
       <aside className="builder-sidebar">
         {leaderCard?.imageUrl && (
@@ -205,7 +206,7 @@ export default function DeckBuilderPage() {
               <div
                 key={entry.cardId}
                 className="sidebar-entry"
-                onMouseEnter={(e) => card && setPreview({ card, rect: e.currentTarget.getBoundingClientRect() })}
+                onMouseEnter={() => card && setPreview(card)}
                 onMouseLeave={() => setPreview(null)}
               >
                 <div className="entry-thumb-wrap">
@@ -294,7 +295,7 @@ export default function DeckBuilderPage() {
                       key={card.id}
                       className={`card-item${maxed ? ' card-maxed' : ''}`}
                       onClick={() => !maxed && addCard(card)}
-                      onMouseEnter={(e) => setPreview({ card, rect: e.currentTarget.getBoundingClientRect() })}
+                      onMouseEnter={() => setPreview(card)}
                       onMouseLeave={() => setPreview(null)}
                     >
                       {card.imageUrl ? (
@@ -313,6 +314,7 @@ export default function DeckBuilderPage() {
       </div>
     </div>
 
-    {preview && <CardPreview card={preview.card} rect={preview.rect} />}
+    {preview && <CardPreview card={preview} />}
+    </>
   )
 }
