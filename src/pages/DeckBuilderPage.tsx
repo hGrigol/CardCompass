@@ -6,6 +6,7 @@ import { fetchAllCards } from '../services/api'
 import { useDeck } from '../hooks/useDeck'
 import LeaderSelect from '../components/LeaderSelect'
 import CardPreview from '../components/CardPreview'
+import ManaCurve from '../components/ManaCurve'
 import type { Card, CardColor } from '../types/card'
 import type { Deck } from '../types/deck'
 import { DECK_RULES } from '../types/deck'
@@ -169,9 +170,23 @@ export default function DeckBuilderPage() {
     return <LeaderSelect allCards={allCards} onSelect={setLeader} />
   }
 
+  const curveEntries = useMemo(() =>
+    deck.cards.flatMap((e) => {
+      const card = allCards.find((c) => c.id === e.cardId)
+      return card ? [{ card, count: e.count }] : []
+    }),
+  [deck.cards, allCards])
+
   return (
     <>
     <div className="builder-layout">
+      <div className="builder-left">
+        {leaderCard?.imageUrl && (
+          <img src={leaderCard.imageUrl} alt={leaderCard.name} className="leader-panel-img" />
+        )}
+        <ManaCurve entries={curveEntries} />
+      </div>
+
       <div className="builder-right">
         <div className="builder-toolbar">
           <input
@@ -240,9 +255,6 @@ export default function DeckBuilderPage() {
       </div>
 
       <aside className="builder-sidebar">
-        {leaderCard?.imageUrl && (
-          <img src={leaderCard.imageUrl} alt={leaderCard.name} className="sidebar-leader-img" />
-        )}
         <div className="leader-colors">
           {deck.leaderColors.map((c) => (
             <span key={c} className={`color-dot color-${c}`} />

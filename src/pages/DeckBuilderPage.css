@@ -17,9 +17,9 @@
   height: calc(100dvh - var(--nav-height));
 }
 
-/* Sidebar */
-.builder-sidebar {
-  width: 300px;
+/* Left panel */
+.builder-left {
+  width: 200px;
   flex-shrink: 0;
   background: var(--color-surface);
   border-right: 1px solid var(--color-border);
@@ -28,9 +28,20 @@
   overflow-y: auto;
 }
 
-.sidebar-leader-img {
+.leader-panel-img {
   width: 100%;
   display: block;
+}
+
+/* Sidebar */
+.builder-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border-left: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
 .leader-colors {

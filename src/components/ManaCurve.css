@@ -1,0 +1,50 @@
+.mana-curve {
+  padding: 0.75rem 0.75rem 0.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.mana-curve-title {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mana-curve-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 80px;
+}
+
+.mana-curve-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.mana-curve-count {
+  font-size: 0.62rem;
+  color: var(--color-text-muted);
+  min-height: 12px;
+  line-height: 1;
+}
+
+.mana-curve-bar {
+  width: 100%;
+  background: var(--color-primary);
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+  transition: height 0.2s ease;
+}
+
+.mana-curve-label {
+  font-size: 0.62rem;
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}
