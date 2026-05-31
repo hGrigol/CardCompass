@@ -73,6 +73,7 @@ export default function DeckBuilderPage() {
   const [colorFilter, setColorFilter] = useState<CardColor | null>(null)
   const [deckName, setDeckName] = useState(deck.name)
   const [preview, setPreview] = useState<Card | null>(null)
+  const [mobileTab, setMobileTab] = useState<'cards' | 'deck' | 'info'>('cards')
 
   useEffect(() => {
     fetchAllCards()
@@ -181,7 +182,7 @@ export default function DeckBuilderPage() {
   return (
     <>
     <div className="builder-layout">
-      <div className="builder-left">
+      <div className={`builder-left${mobileTab === 'info' ? ' mobile-active' : ''}`}>
         {leaderCard?.imageUrl && (
           <img src={leaderCard.imageUrl} alt={leaderCard.name} className="leader-panel-img" />
         )}
@@ -189,7 +190,7 @@ export default function DeckBuilderPage() {
         <DeckStats entries={curveEntries} />
       </div>
 
-      <div className="builder-right">
+      <div className={`builder-right${mobileTab === 'cards' ? ' mobile-active' : ''}`}>
         <div className="builder-toolbar">
           <input
             className="search-input"
@@ -256,7 +257,7 @@ export default function DeckBuilderPage() {
         </div>
       </div>
 
-      <aside className="builder-sidebar">
+      <aside className={`builder-sidebar${mobileTab === 'deck' ? ' mobile-active' : ''}`}>
         <div className="leader-colors">
           {deck.leaderColors.map((c) => (
             <span key={c} className={`color-dot color-${c}`} />
@@ -329,6 +330,12 @@ export default function DeckBuilderPage() {
           })}
         </div>
       </aside>
+
+      <nav className="mobile-tabs">
+        <button className={mobileTab === 'cards' ? 'active' : ''} onClick={() => setMobileTab('cards')}>🃏 Karten</button>
+        <button className={mobileTab === 'deck'  ? 'active' : ''} onClick={() => setMobileTab('deck')}>📋 Deck <span className="mobile-tab-count">{cardCount + 1}</span></button>
+        <button className={mobileTab === 'info'  ? 'active' : ''} onClick={() => setMobileTab('info')}>📊 Info</button>
+      </nav>
     </div>
 
     {preview && <CardPreview card={preview} />}
