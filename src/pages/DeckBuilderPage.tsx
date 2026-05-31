@@ -172,6 +172,73 @@ export default function DeckBuilderPage() {
   return (
     <>
     <div className="builder-layout">
+      <div className="builder-right">
+        <div className="builder-toolbar">
+          <input
+            className="search-input"
+            placeholder="Kosten (z.B. 4) oder Typ (z.B. Revolutionary Army)..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          {deck.leaderColors.length > 1 && (
+            <div className="color-filter">
+              {deck.leaderColors.map((c) => (
+                <button
+                  key={c}
+                  className={`color-filter-btn color-filter-${c}${colorFilter === c ? ' active' : ''}`}
+                  onClick={() => setColorFilter(colorFilter === c ? null : c)}
+                  title={c.charAt(0).toUpperCase() + c.slice(1)}
+                />
+              ))}
+            </div>
+          )}
+          <span className="results-count">{displayedCards.length} Karten</span>
+        </div>
+
+        <div className="builder-scroll" ref={scrollRef}>
+          <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
+            {virtualizer.getVirtualItems().map((vRow) => (
+              <div
+                key={vRow.key}
+                data-index={vRow.index}
+                ref={virtualizer.measureElement}
+                style={{
+                  position: 'absolute',
+                  top: vRow.start,
+                  left: 0,
+                  right: 0,
+                  display: 'grid',
+                  gridTemplateColumns: `repeat(${columns}, 1fr)`,
+                  gap: '0.6rem',
+                  padding: '0 1.25rem 0.6rem',
+                }}
+              >
+                {rows[vRow.index].map((card) => {
+                  const count = deckCardMap.get(card.id) ?? 0
+                  const maxed = count >= DECK_RULES.MAX_COPIES
+                  return (
+                    <div
+                      key={card.id}
+                      className={`card-item${maxed ? ' card-maxed' : ''}`}
+                      onClick={() => !maxed && addCard(card)}
+                      onMouseEnter={() => setPreview(card)}
+                      onMouseLeave={() => setPreview(null)}
+                    >
+                      {card.imageUrl ? (
+                        <img src={card.imageUrl} alt={card.name} className="card-img" loading="lazy" />
+                      ) : (
+                        <div className="card-img-placeholder">{card.name}</div>
+                      )}
+                      {count > 0 && <span className="card-badge">x{count}</span>}
+                    </div>
+                  )
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <aside className="builder-sidebar">
         {leaderCard?.imageUrl && (
           <img src={leaderCard.imageUrl} alt={leaderCard.name} className="sidebar-leader-img" />
@@ -245,73 +312,6 @@ export default function DeckBuilderPage() {
           })}
         </div>
       </aside>
-
-      <div className="builder-right">
-        <div className="builder-toolbar">
-          <input
-            className="search-input"
-            placeholder="Kosten (z.B. 4) oder Typ (z.B. Revolutionary Army)..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          {deck.leaderColors.length > 1 && (
-            <div className="color-filter">
-              {deck.leaderColors.map((c) => (
-                <button
-                  key={c}
-                  className={`color-filter-btn color-filter-${c}${colorFilter === c ? ' active' : ''}`}
-                  onClick={() => setColorFilter(colorFilter === c ? null : c)}
-                  title={c.charAt(0).toUpperCase() + c.slice(1)}
-                />
-              ))}
-            </div>
-          )}
-          <span className="results-count">{displayedCards.length} Karten</span>
-        </div>
-
-        <div className="builder-scroll" ref={scrollRef}>
-          <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
-            {virtualizer.getVirtualItems().map((vRow) => (
-              <div
-                key={vRow.key}
-                data-index={vRow.index}
-                ref={virtualizer.measureElement}
-                style={{
-                  position: 'absolute',
-                  top: vRow.start,
-                  left: 0,
-                  right: 0,
-                  display: 'grid',
-                  gridTemplateColumns: `repeat(${columns}, 1fr)`,
-                  gap: '0.6rem',
-                  padding: '0 1.25rem 0.6rem',
-                }}
-              >
-                {rows[vRow.index].map((card) => {
-                  const count = deckCardMap.get(card.id) ?? 0
-                  const maxed = count >= DECK_RULES.MAX_COPIES
-                  return (
-                    <div
-                      key={card.id}
-                      className={`card-item${maxed ? ' card-maxed' : ''}`}
-                      onClick={() => !maxed && addCard(card)}
-                      onMouseEnter={() => setPreview(card)}
-                      onMouseLeave={() => setPreview(null)}
-                    >
-                      {card.imageUrl ? (
-                        <img src={card.imageUrl} alt={card.name} className="card-img" loading="lazy" />
-                      ) : (
-                        <div className="card-img-placeholder">{card.name}</div>
-                      )}
-                      {count > 0 && <span className="card-badge">x{count}</span>}
-                    </div>
-                  )
-                })}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
 
     {preview && <CardPreview card={preview} />}
