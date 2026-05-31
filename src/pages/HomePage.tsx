@@ -19,6 +19,14 @@ export default function HomePage() {
     setDecks(loadDecks())
   }
 
+  function handleCopy(e: React.MouseEvent, deck: Deck) {
+    e.stopPropagation()
+    const leader = deck.leaderId ? `1x${deck.leaderId}` : ''
+    const rest = deck.cards.map((c) => `${c.count}x${c.cardId}`).join('\n')
+    const text = [leader, rest].filter(Boolean).join('\n')
+    navigator.clipboard.writeText(text)
+  }
+
   return (
     <div className="home-page">
       <h1 className="home-title">Meine Decks</h1>
@@ -43,12 +51,21 @@ export default function HomePage() {
               <p className="deck-card-count">
                 {deck.cards.reduce((s, e) => s + e.count, 0) + 1} / 51 Karten
               </p>
-              <button
-                className="deck-card-delete"
-                onClick={(e) => { e.stopPropagation(); handleDelete(deck.id) }}
-              >
-                Löschen
-              </button>
+              <div className="deck-card-actions">
+                <button
+                  className="deck-card-copy"
+                  onClick={(e) => handleCopy(e, deck)}
+                  title="Deckliste kopieren"
+                >
+                  📋
+                </button>
+                <button
+                  className="deck-card-delete"
+                  onClick={(e) => { e.stopPropagation(); handleDelete(deck.id) }}
+                >
+                  Löschen
+                </button>
+              </div>
             </div>
           ))}
         </div>
