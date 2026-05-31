@@ -134,13 +134,6 @@ export default function DeckBuilderPage() {
     return () => ro.disconnect()
   }, [scrollEl])
 
-  useEffect(() => {
-    if (mobileTab !== 'cards' || !scrollEl) return
-    const id = requestAnimationFrame(() => {
-      setColumns(Math.max(2, Math.floor(scrollEl.clientWidth / CARD_MIN_WIDTH)))
-    })
-    return () => cancelAnimationFrame(id)
-  }, [mobileTab, scrollEl])
 
   const rows = useMemo(() => {
     const result: Card[][] = []
