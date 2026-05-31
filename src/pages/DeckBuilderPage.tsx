@@ -5,6 +5,7 @@ import { loadDecks, saveDeck } from '../services/storage'
 import { fetchAllCards } from '../services/api'
 import { useDeck } from '../hooks/useDeck'
 import LeaderSelect from '../components/LeaderSelect'
+import CardPreview from '../components/CardPreview'
 import type { Card, CardColor } from '../types/card'
 import type { Deck } from '../types/deck'
 import { DECK_RULES } from '../types/deck'
@@ -69,6 +70,7 @@ export default function DeckBuilderPage() {
   const [query, setQuery] = useState('')
   const [colorFilter, setColorFilter] = useState<CardColor | null>(null)
   const [deckName, setDeckName] = useState(deck.name)
+  const [preview, setPreview] = useState<{ card: Card; rect: DOMRect } | null>(null)
 
   useEffect(() => {
     fetchAllCards()
@@ -200,7 +202,12 @@ export default function DeckBuilderPage() {
           {deck.cards.map((entry) => {
             const card = allCards.find((c) => c.id === entry.cardId)
             return (
-              <div key={entry.cardId} className="sidebar-entry">
+              <div
+                key={entry.cardId}
+                className="sidebar-entry"
+                onMouseEnter={(e) => card && setPreview({ card, rect: e.currentTarget.getBoundingClientRect() })}
+                onMouseLeave={() => setPreview(null)}
+              >
                 <div className="entry-thumb-wrap">
                   {card?.imageUrl ? (
                     <img src={card.imageUrl} alt={card.name} className="entry-thumb" />
@@ -287,7 +294,8 @@ export default function DeckBuilderPage() {
                       key={card.id}
                       className={`card-item${maxed ? ' card-maxed' : ''}`}
                       onClick={() => !maxed && addCard(card)}
-                      title={`${card.name}${card.cost !== null ? ` · ${card.cost} Kosten` : ''}${card.power !== null ? ` · ${card.power} Power` : ''}`}
+                      onMouseEnter={(e) => setPreview({ card, rect: e.currentTarget.getBoundingClientRect() })}
+                      onMouseLeave={() => setPreview(null)}
                     >
                       {card.imageUrl ? (
                         <img src={card.imageUrl} alt={card.name} className="card-img" loading="lazy" />
@@ -304,5 +312,7 @@ export default function DeckBuilderPage() {
         </div>
       </div>
     </div>
+
+    {preview && <CardPreview card={preview.card} rect={preview.rect} />}
   )
 }
