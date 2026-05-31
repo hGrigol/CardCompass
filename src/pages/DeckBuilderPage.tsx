@@ -95,6 +95,17 @@ export default function DeckBuilderPage() {
 
   const deckCardMap = new Map(deck.cards.map((e) => [e.cardId, e.count]))
 
+  const totalPrice = useMemo(() => {
+    let sum = 0
+    let hasAny = false
+    if (leaderCard?.marketPrice != null) { sum += leaderCard.marketPrice; hasAny = true }
+    for (const entry of deck.cards) {
+      const card = allCards.find((c) => c.id === entry.cardId)
+      if (card?.marketPrice != null) { sum += card.marketPrice * entry.count; hasAny = true }
+    }
+    return hasAny ? sum : null
+  }, [deck.cards, allCards, leaderCard])
+
   // Virtualization — callback ref triggers re-render when element mounts
   const [scrollEl, setScrollEl] = useState<HTMLDivElement | null>(null)
   const scrollRef = useCallback((el: HTMLDivElement | null) => setScrollEl(el), [])
@@ -179,7 +190,10 @@ export default function DeckBuilderPage() {
           <span className={cardCount >= DECK_RULES.NON_LEADER_CARDS ? 'count-complete' : ''}>
             {cardCount + 1}
           </span>{' '}
-          / 50 Karten
+          / 51 Karten
+          {totalPrice != null && (
+            <span className="sidebar-total-price"> · ${totalPrice.toFixed(2)}</span>
+          )}
         </p>
 
         <div className="sidebar-cards">
@@ -198,11 +212,16 @@ export default function DeckBuilderPage() {
                 <div className="entry-info">
                   <span className="entry-name">{card?.name ?? entry.cardId}</span>
                   {card && (
-                    <span className="entry-meta">
-                      {card.cost !== null ? `${card.cost} Kosten` : ''}
-                      {card.cost !== null && card.power !== null ? ' · ' : ''}
-                      {card.power !== null ? `${card.power} Power` : ''}
-                    </span>
+                    <>
+                      <span className="entry-meta">
+                        {card.cost !== null ? `${card.cost} Kosten` : ''}
+                        {card.cost !== null && card.power !== null ? ' · ' : ''}
+                        {card.power !== null ? `${card.power} Power` : ''}
+                      </span>
+                      {card.marketPrice != null && (
+                        <span className="entry-price">${card.marketPrice.toFixed(2)}</span>
+                      )}
+                    </>
                   )}
                 </div>
                 <div className="entry-actions">

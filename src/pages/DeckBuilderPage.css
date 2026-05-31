@@ -140,6 +140,17 @@
   color: var(--color-text-muted);
 }
 
+.entry-price {
+  font-size: 0.7rem;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.sidebar-total-price {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
 .entry-actions {
   display: flex;
   flex-direction: column;
