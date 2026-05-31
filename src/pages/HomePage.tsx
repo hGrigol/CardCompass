@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { loadDecks, deleteDeck } from '../services/storage'
+import NewDeckModal from '../components/NewDeckModal'
 import type { Deck } from '../types/deck'
 import './HomePage.css'
 
 export default function HomePage() {
   const [decks, setDecks] = useState<Deck[]>([])
+  const [showNewDeck, setShowNewDeck] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function HomePage() {
       {decks.length === 0 ? (
         <div className="home-empty">
           <p>Noch keine Decks gespeichert.</p>
-          <button className="btn-primary" onClick={() => navigate('/deck/new')}>
+          <button className="btn-primary" onClick={() => setShowNewDeck(true)}>
             Erstes Deck erstellen
           </button>
         </div>
@@ -39,7 +41,7 @@ export default function HomePage() {
               </div>
               <h2 className="deck-card-name">{deck.name}</h2>
               <p className="deck-card-count">
-                {deck.cards.reduce((s, e) => s + e.count, 0) + 1} / 50 Karten
+                {deck.cards.reduce((s, e) => s + e.count, 0) + 1} / 51 Karten
               </p>
               <button
                 className="deck-card-delete"
@@ -51,6 +53,8 @@ export default function HomePage() {
           ))}
         </div>
       )}
+
+      {showNewDeck && <NewDeckModal onClose={() => setShowNewDeck(false)} />}
     </div>
   )
 }

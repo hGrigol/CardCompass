@@ -1,7 +1,7 @@
 import type { Card, CardCategory, CardColor } from '../types/card';
 
 const BASE = 'https://www.optcgapi.com/api';
-const CACHE_KEY = 'cardcompass_cards_v2';
+const CACHE_KEY = 'cardcompass_cards_v4';
 
 interface OptcgCard {
   card_set_id: string;
@@ -75,17 +75,20 @@ export async function fetchAllCards(): Promise<Card[]> {
   const cached = sessionStorage.getItem(CACHE_KEY);
   if (cached) return JSON.parse(cached) as Card[];
 
-  const [setCards, stCards] = await Promise.all([
+  const results = await Promise.allSettled([
     fetchJson<OptcgCard[]>(`${BASE}/allSetCards/`),
     fetchJson<OptcgCard[]>(`${BASE}/allSTCards/`),
   ]);
 
   const seen = new Set<string>();
   const cards: Card[] = [];
-  for (const raw of [...setCards, ...stCards]) {
-    if (!seen.has(raw.card_set_id)) {
-      seen.add(raw.card_set_id);
-      cards.push(mapCard(raw));
+  for (const result of results) {
+    if (result.status !== 'fulfilled') continue;
+    for (const raw of result.value) {
+      if (!seen.has(raw.card_set_id)) {
+        seen.add(raw.card_set_id);
+        cards.push(mapCard(raw));
+      }
     }
   }
 

@@ -16,7 +16,7 @@ export interface Deck {
 }
 
 export const DECK_RULES = {
-  TOTAL_CARDS: 50,
-  NON_LEADER_CARDS: 49,
+  TOTAL_CARDS: 51,
+  NON_LEADER_CARDS: 50,
   MAX_COPIES: 4,
 } as const;
