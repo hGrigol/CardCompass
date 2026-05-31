@@ -306,7 +306,6 @@ export default function DeckBuilderPage() {
                   ) : (
                     <div className="entry-thumb-placeholder" />
                   )}
-                  <span className="entry-count-badge">x{entry.count}</span>
                 </div>
                 <div className="entry-info">
                   <span className="entry-name">{card?.name ?? entry.cardId}</span>
@@ -315,12 +314,15 @@ export default function DeckBuilderPage() {
                   )}
                 </div>
                 <div className="entry-actions">
-                  <button
-                    className="entry-add"
-                    onClick={() => card && addCard(card)}
-                    disabled={entry.count >= DECK_RULES.MAX_COPIES || cardCount >= DECK_RULES.NON_LEADER_CARDS}
-                  >+</button>
-                  <button className="entry-remove" onClick={() => removeCard(entry.cardId)}>−</button>
+                  <span className="entry-count">{entry.count}</span>
+                  <div className="entry-buttons">
+                    <button
+                      className="entry-add"
+                      onClick={() => card && addCard(card)}
+                      disabled={entry.count >= DECK_RULES.MAX_COPIES || cardCount >= DECK_RULES.NON_LEADER_CARDS}
+                    >+</button>
+                    <button className="entry-remove" onClick={() => removeCard(entry.cardId)}>−</button>
+                  </div>
                 </div>
               </div>
             )

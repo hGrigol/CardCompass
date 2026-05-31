@@ -119,17 +119,12 @@
   border-radius: 4px;
 }
 
-.entry-count-badge {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  background: var(--color-primary);
-  color: #0f1117;
-  font-size: 0.68rem;
+.entry-count {
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 0 4px;
-  border-radius: 3px;
-  line-height: 1.4;
+  color: var(--color-primary);
+  text-align: center;
+  line-height: 1;
 }
 
 .entry-info {
@@ -196,10 +191,17 @@
 
 .entry-actions {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
   flex-shrink: 0;
   align-self: center;
+}
+
+.entry-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .entry-add,
