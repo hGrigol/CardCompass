@@ -1,0 +1,71 @@
+.deck-stats {
+  padding: 0.75rem 0.75rem 0.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.deck-stats-title {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.deck-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
+}
+
+.deck-stats-label {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  width: 58px;
+  flex-shrink: 0;
+}
+
+.counter-icon {
+  width: 22px;
+  height: 22px;
+  clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 800;
+  color: #0f1117;
+  flex-shrink: 0;
+}
+
+.deck-stats-emoji {
+  font-size: 0.85rem;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.deck-stats-bar-wrap {
+  flex: 1;
+  height: 6px;
+  background: var(--color-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.deck-stats-bar {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.2s ease;
+}
+
+.deck-stats-value {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text);
+  width: 18px;
+  text-align: right;
+  flex-shrink: 0;
+}

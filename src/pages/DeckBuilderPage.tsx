@@ -7,6 +7,7 @@ import { useDeck } from '../hooks/useDeck'
 import LeaderSelect from '../components/LeaderSelect'
 import CardPreview from '../components/CardPreview'
 import ManaCurve from '../components/ManaCurve'
+import DeckStats from '../components/DeckStats'
 import type { Card, CardColor } from '../types/card'
 import type { Deck } from '../types/deck'
 import { DECK_RULES } from '../types/deck'
@@ -185,6 +186,7 @@ export default function DeckBuilderPage() {
           <img src={leaderCard.imageUrl} alt={leaderCard.name} className="leader-panel-img" />
         )}
         <ManaCurve entries={curveEntries} />
+        <DeckStats entries={curveEntries} />
       </div>
 
       <div className="builder-right">
