@@ -88,11 +88,11 @@
 }
 
 .deck-card-delete {
-  font-size: 0.8rem;
-  color: var(--color-red);
-  padding: 0;
+  font-size: 1rem;
+  opacity: 0.6;
+  transition: opacity 0.15s;
 }
 
 .deck-card-delete:hover {
-  text-decoration: underline;
+  opacity: 1;
 }

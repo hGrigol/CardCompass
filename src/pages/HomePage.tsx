@@ -62,8 +62,9 @@ export default function HomePage() {
                 <button
                   className="deck-card-delete"
                   onClick={(e) => { e.stopPropagation(); handleDelete(deck.id) }}
+                  title="Deck löschen"
                 >
-                  Löschen
+                  🗑️
                 </button>
               </div>
             </div>
