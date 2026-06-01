@@ -95,7 +95,7 @@ export default function DeckBuilderPage() {
 
   function handlePointerDown(e: React.PointerEvent, card: Card) {
     if (e.pointerType !== 'touch') return
-    previewTimer.current = setTimeout(() => setPreview(card), 150)
+    previewTimer.current = setTimeout(() => setPreview(card), 400)
   }
 
   function handlePointerMove(e: React.PointerEvent) {
