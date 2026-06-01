@@ -84,7 +84,7 @@ export default function DeckBuilderPage() {
     window.history.replaceState(null, '', `#${tab}`)
   }
   const previewTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const pointerStart = useRef<{ x: number; y: number } | null>(null)
+  const touchActive = useRef(false)
 
   function handlePointerEnter(e: React.PointerEvent, card: Card) {
     if (e.pointerType !== 'touch') setPreview(card)
@@ -96,23 +96,32 @@ export default function DeckBuilderPage() {
 
   function handlePointerDown(e: React.PointerEvent, card: Card) {
     if (e.pointerType !== 'touch') return
-    pointerStart.current = { x: e.clientX, y: e.clientY }
-    previewTimer.current = setTimeout(() => setPreview(card), 400)
+    touchActive.current = true
+    previewTimer.current = setTimeout(() => {
+      if (touchActive.current) setPreview(card)
+    }, 400)
   }
 
   function handlePointerMove(e: React.PointerEvent) {
-    if (e.pointerType !== 'touch' || !pointerStart.current || !previewTimer.current) return
-    const dx = e.clientX - pointerStart.current.x
-    const dy = e.clientY - pointerStart.current.y
-    if (Math.sqrt(dx * dx + dy * dy) > 10) {
+    if (e.pointerType !== 'touch') return
+    // significant movement = scrolling, cancel
+    if (previewTimer.current) {
       clearTimeout(previewTimer.current)
       previewTimer.current = null
     }
+    touchActive.current = false
   }
 
   function handlePointerUp(e: React.PointerEvent) {
     if (e.pointerType !== 'touch') return
+    touchActive.current = false
     if (previewTimer.current) { clearTimeout(previewTimer.current); previewTimer.current = null }
+    setPreview(null)
+  }
+
+  function handlePointerCancel(e: React.PointerEvent) {
+    if (e.pointerType !== 'touch') return
+    touchActive.current = false
     setPreview(null)
   }
 
@@ -235,7 +244,7 @@ export default function DeckBuilderPage() {
             onPointerDown={(e) => handlePointerDown(e, leaderCard)}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
+            onPointerCancel={handlePointerCancel}
             onContextMenu={(e) => e.preventDefault()}
           />
         )}
@@ -297,7 +306,7 @@ export default function DeckBuilderPage() {
                       onPointerDown={(e) => handlePointerDown(e, card)}
                       onPointerMove={handlePointerMove}
                       onPointerUp={handlePointerUp}
-                      onPointerCancel={handlePointerUp}
+                      onPointerCancel={handlePointerCancel}
                       onContextMenu={(e) => e.preventDefault()}
                     >
                       {card.imageUrl ? (
@@ -351,7 +360,7 @@ export default function DeckBuilderPage() {
                 onPointerDown={(e) => card && handlePointerDown(e, card)}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
-                onPointerCancel={handlePointerUp}
+                onPointerCancel={handlePointerCancel}
                 onContextMenu={(e) => e.preventDefault()}
               >
                 {card && (
