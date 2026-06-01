@@ -73,7 +73,9 @@ export default function DeckBuilderPage() {
   const [colorFilter, setColorFilter] = useState<CardColor | null>(null)
   const [deckName, setDeckName] = useState(deck.name)
   const [preview, setPreview] = useState<Card | null>(null)
-  const [mobileTab, setMobileTab] = useState<'cards' | 'deck' | 'info'>('cards')
+  const [mobileTab, setMobileTab] = useState<'cards' | 'deck' | 'info'>(
+    existingDeck?.cards.length ? 'deck' : 'cards'
+  )
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   function handleTouchStart(card: Card) {
