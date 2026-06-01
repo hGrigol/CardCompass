@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { loadDecks, saveDeck } from '../services/storage'
@@ -74,6 +74,16 @@ export default function DeckBuilderPage() {
   const [deckName, setDeckName] = useState(deck.name)
   const [preview, setPreview] = useState<Card | null>(null)
   const [mobileTab, setMobileTab] = useState<'cards' | 'deck' | 'info'>('cards')
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  function handleTouchStart(card: Card) {
+    longPressTimer.current = setTimeout(() => setPreview(card), 500)
+  }
+
+  function handleTouchEnd() {
+    if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null }
+    setPreview(null)
+  }
 
   useEffect(() => {
     fetchAllCards()
@@ -242,6 +252,9 @@ export default function DeckBuilderPage() {
                       onClick={() => !maxed && addCard(card)}
                       onMouseEnter={() => setPreview(card)}
                       onMouseLeave={() => setPreview(null)}
+                      onTouchStart={() => handleTouchStart(card)}
+                      onTouchEnd={handleTouchEnd}
+                      onTouchMove={handleTouchEnd}
                     >
                       {card.imageUrl ? (
                         <img src={card.imageUrl} alt={card.name} className="card-img" loading="lazy" />
@@ -291,6 +304,9 @@ export default function DeckBuilderPage() {
                 className="sidebar-entry"
                 onMouseEnter={() => card && setPreview(card)}
                 onMouseLeave={() => setPreview(null)}
+                onTouchStart={() => card && handleTouchStart(card)}
+                onTouchEnd={handleTouchEnd}
+                onTouchMove={handleTouchEnd}
               >
                 {card && (
                   <div className="entry-stats">
@@ -321,9 +337,14 @@ export default function DeckBuilderPage() {
                     <button
                       className="entry-add"
                       onClick={() => card && addCard(card)}
+                      onTouchStart={(e) => e.stopPropagation()}
                       disabled={entry.count >= DECK_RULES.MAX_COPIES || cardCount >= DECK_RULES.NON_LEADER_CARDS}
                     >+</button>
-                    <button className="entry-remove" onClick={() => removeCard(entry.cardId)}>−</button>
+                    <button
+                      className="entry-remove"
+                      onClick={() => removeCard(entry.cardId)}
+                      onTouchStart={(e) => e.stopPropagation()}
+                    >−</button>
                   </div>
                 </div>
               </div>
