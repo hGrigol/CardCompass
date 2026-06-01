@@ -84,6 +84,7 @@ export default function DeckBuilderPage() {
     window.history.replaceState(null, '', `#${tab}`)
   }
   const previewTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pointerStart = useRef<{ x: number; y: number } | null>(null)
 
   function handlePointerEnter(e: React.PointerEvent, card: Card) {
     if (e.pointerType !== 'touch') setPreview(card)
@@ -95,12 +96,18 @@ export default function DeckBuilderPage() {
 
   function handlePointerDown(e: React.PointerEvent, card: Card) {
     if (e.pointerType !== 'touch') return
+    pointerStart.current = { x: e.clientX, y: e.clientY }
     previewTimer.current = setTimeout(() => setPreview(card), 400)
   }
 
   function handlePointerMove(e: React.PointerEvent) {
-    if (e.pointerType !== 'touch') return
-    if (previewTimer.current) { clearTimeout(previewTimer.current); previewTimer.current = null }
+    if (e.pointerType !== 'touch' || !pointerStart.current || !previewTimer.current) return
+    const dx = e.clientX - pointerStart.current.x
+    const dy = e.clientY - pointerStart.current.y
+    if (Math.sqrt(dx * dx + dy * dy) > 10) {
+      clearTimeout(previewTimer.current)
+      previewTimer.current = null
+    }
   }
 
   function handlePointerUp(e: React.PointerEvent) {
