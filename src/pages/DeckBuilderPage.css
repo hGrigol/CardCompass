@@ -468,4 +468,14 @@
     width: auto;
     align-self: center;
   }
+
+  .entry-add,
+  .entry-remove {
+    font-size: 1.3rem;
+    padding: 2px 8px;
+  }
+
+  .entry-count {
+    font-size: 0.9rem;
+  }
 }

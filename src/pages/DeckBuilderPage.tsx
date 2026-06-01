@@ -73,9 +73,17 @@ export default function DeckBuilderPage() {
   const [colorFilter, setColorFilter] = useState<CardColor | null>(null)
   const [deckName, setDeckName] = useState(deck.name)
   const [preview, setPreview] = useState<Card | null>(null)
-  const [mobileTab, setMobileTab] = useState<'cards' | 'deck' | 'info'>(
-    existingDeck?.cards.length ? 'deck' : 'cards'
-  )
+  const tabKey = `mobile_tab_${id ?? 'new'}`
+  const [mobileTab, setMobileTab] = useState<'cards' | 'deck' | 'info'>(() => {
+    const saved = sessionStorage.getItem(tabKey)
+    if (saved === 'cards' || saved === 'deck' || saved === 'info') return saved
+    return existingDeck?.cards.length ? 'deck' : 'cards'
+  })
+
+  function switchTab(tab: 'cards' | 'deck' | 'info') {
+    setMobileTab(tab)
+    sessionStorage.setItem(tabKey, tab)
+  }
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   function handleTouchStart(card: Card) {
@@ -196,8 +204,17 @@ export default function DeckBuilderPage() {
     <>
     <div className="builder-layout">
       <div className={`builder-left${mobileTab === 'info' ? ' mobile-active' : ''}`}>
-        {leaderCard?.imageUrl && (
-          <img src={leaderCard.imageUrl} alt={leaderCard.name} className="leader-panel-img" />
+        {leaderCard && (
+          <img
+            src={leaderCard.imageUrl}
+            alt={leaderCard.name}
+            className="leader-panel-img"
+            onMouseEnter={() => setPreview(leaderCard)}
+            onMouseLeave={() => setPreview(null)}
+            onTouchStart={() => handleTouchStart(leaderCard)}
+            onTouchEnd={handleTouchEnd}
+            onTouchMove={handleTouchEnd}
+          />
         )}
         <ManaCurve entries={curveEntries} />
         <DeckStats entries={curveEntries} />
@@ -356,9 +373,9 @@ export default function DeckBuilderPage() {
       </aside>
 
       <nav className="mobile-tabs">
-        <button className={mobileTab === 'cards' ? 'active' : ''} onClick={() => setMobileTab('cards')}>🃏 Karten</button>
-        <button className={mobileTab === 'deck'  ? 'active' : ''} onClick={() => setMobileTab('deck')}>📋 Deck <span className="mobile-tab-count">{cardCount + 1}</span></button>
-        <button className={mobileTab === 'info'  ? 'active' : ''} onClick={() => setMobileTab('info')}>📊 Info</button>
+        <button className={mobileTab === 'cards' ? 'active' : ''} onClick={() => switchTab('cards')}>🃏 Karten</button>
+        <button className={mobileTab === 'deck'  ? 'active' : ''} onClick={() => switchTab('deck')}>📋 Deck <span className="mobile-tab-count">{cardCount + 1}</span></button>
+        <button className={mobileTab === 'info'  ? 'active' : ''} onClick={() => switchTab('info')}>📊 Info</button>
       </nav>
     </div>
 
