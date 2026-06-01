@@ -320,8 +320,10 @@
   transition: transform 0.12s;
 }
 
-.card-item:hover:not(.card-maxed) {
-  transform: scale(1.05);
+@media (hover: hover) {
+  .card-item:hover:not(.card-maxed) {
+    transform: scale(1.05);
+  }
 }
 
 .card-maxed {

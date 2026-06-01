@@ -83,15 +83,20 @@ export default function DeckBuilderPage() {
     setMobileTab(tab)
     window.history.replaceState(null, '', `#${tab}`)
   }
-  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const touchActive = useRef(false)
 
   function handleTouchStart(card: Card) {
-    longPressTimer.current = setTimeout(() => setPreview(card), 500)
+    touchActive.current = true
+    setPreview(card)
   }
 
   function handleTouchEnd() {
-    if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null }
     setPreview(null)
+    setTimeout(() => { touchActive.current = false }, 300)
+  }
+
+  function handleMouseEnter(card: Card) {
+    if (!touchActive.current) setPreview(card)
   }
 
   useEffect(() => {
@@ -208,7 +213,7 @@ export default function DeckBuilderPage() {
             src={leaderCard.imageUrl}
             alt={leaderCard.name}
             className="leader-panel-img"
-            onMouseEnter={() => setPreview(leaderCard)}
+            onMouseEnter={() => handleMouseEnter(leaderCard)}
             onMouseLeave={() => setPreview(null)}
             onTouchStart={() => handleTouchStart(leaderCard)}
             onTouchEnd={handleTouchEnd}
@@ -268,7 +273,7 @@ export default function DeckBuilderPage() {
                       key={card.id}
                       className={`card-item${maxed ? ' card-maxed' : ''}`}
                       onClick={() => !maxed && addCard(card)}
-                      onMouseEnter={() => setPreview(card)}
+                      onMouseEnter={() => handleMouseEnter(card)}
                       onMouseLeave={() => setPreview(null)}
                       onTouchStart={() => handleTouchStart(card)}
                       onTouchEnd={handleTouchEnd}
@@ -320,7 +325,7 @@ export default function DeckBuilderPage() {
               <div
                 key={entry.cardId}
                 className="sidebar-entry"
-                onMouseEnter={() => card && setPreview(card)}
+                onMouseEnter={() => card && handleMouseEnter(card)}
                 onMouseLeave={() => setPreview(null)}
                 onTouchStart={() => card && handleTouchStart(card)}
                 onTouchEnd={handleTouchEnd}
