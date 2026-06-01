@@ -218,6 +218,7 @@ export default function DeckBuilderPage() {
             onTouchStart={() => handleTouchStart(leaderCard)}
             onTouchEnd={handleTouchEnd}
             onTouchMove={handleTouchEnd}
+            onContextMenu={(e) => e.preventDefault()}
           />
         )}
         <ManaCurve entries={curveEntries} />
@@ -278,6 +279,7 @@ export default function DeckBuilderPage() {
                       onTouchStart={() => handleTouchStart(card)}
                       onTouchEnd={handleTouchEnd}
                       onTouchMove={handleTouchEnd}
+                      onContextMenu={(e) => e.preventDefault()}
                     >
                       {card.imageUrl ? (
                         <img src={card.imageUrl} alt={card.name} className="card-img" loading="lazy" />
@@ -330,6 +332,7 @@ export default function DeckBuilderPage() {
                 onTouchStart={() => card && handleTouchStart(card)}
                 onTouchEnd={handleTouchEnd}
                 onTouchMove={handleTouchEnd}
+                onContextMenu={(e) => e.preventDefault()}
               >
                 {card && (
                   <div className="entry-stats">
