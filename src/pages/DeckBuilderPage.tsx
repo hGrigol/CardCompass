@@ -73,16 +73,15 @@ export default function DeckBuilderPage() {
   const [colorFilter, setColorFilter] = useState<CardColor | null>(null)
   const [deckName, setDeckName] = useState(deck.name)
   const [preview, setPreview] = useState<Card | null>(null)
-  const tabKey = `mobile_tab_${id ?? 'new'}`
   const [mobileTab, setMobileTab] = useState<'cards' | 'deck' | 'info'>(() => {
-    const saved = localStorage.getItem(tabKey)
-    if (saved === 'cards' || saved === 'deck' || saved === 'info') return saved
+    const hash = window.location.hash.slice(1)
+    if (hash === 'cards' || hash === 'deck' || hash === 'info') return hash as 'cards' | 'deck' | 'info'
     return existingDeck?.cards.length ? 'deck' : 'cards'
   })
 
   function switchTab(tab: 'cards' | 'deck' | 'info') {
     setMobileTab(tab)
-    localStorage.setItem(tabKey, tab)
+    window.history.replaceState(null, '', `#${tab}`)
   }
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
