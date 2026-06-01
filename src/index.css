@@ -4,6 +4,7 @@
   padding: 0;
   scrollbar-width: thin;
   scrollbar-color: var(--color-text-muted) transparent;
+  -webkit-tap-highlight-color: transparent;
 }
 
 *::-webkit-scrollbar {
