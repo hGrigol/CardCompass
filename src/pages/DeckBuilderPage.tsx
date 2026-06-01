@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { loadDecks, saveDeck } from '../services/storage'
@@ -83,6 +83,8 @@ export default function DeckBuilderPage() {
     setMobileTab(tab)
     window.history.replaceState(null, '', `#${tab}`)
   }
+  const previewTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
   function handlePointerEnter(e: React.PointerEvent, card: Card) {
     if (e.pointerType !== 'touch') setPreview(card)
   }
@@ -92,11 +94,19 @@ export default function DeckBuilderPage() {
   }
 
   function handlePointerDown(e: React.PointerEvent, card: Card) {
-    if (e.pointerType === 'touch') setPreview(card)
+    if (e.pointerType !== 'touch') return
+    previewTimer.current = setTimeout(() => setPreview(card), 150)
+  }
+
+  function handlePointerMove(e: React.PointerEvent) {
+    if (e.pointerType !== 'touch') return
+    if (previewTimer.current) { clearTimeout(previewTimer.current); previewTimer.current = null }
   }
 
   function handlePointerUp(e: React.PointerEvent) {
-    if (e.pointerType === 'touch') setPreview(null)
+    if (e.pointerType !== 'touch') return
+    if (previewTimer.current) { clearTimeout(previewTimer.current); previewTimer.current = null }
+    setPreview(null)
   }
 
   useEffect(() => {
@@ -216,6 +226,7 @@ export default function DeckBuilderPage() {
             onPointerEnter={(e) => handlePointerEnter(e, leaderCard)}
             onPointerLeave={handlePointerLeave}
             onPointerDown={(e) => handlePointerDown(e, leaderCard)}
+            onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
             onContextMenu={(e) => e.preventDefault()}
@@ -277,6 +288,7 @@ export default function DeckBuilderPage() {
                       onPointerEnter={(e) => handlePointerEnter(e, card)}
                       onPointerLeave={handlePointerLeave}
                       onPointerDown={(e) => handlePointerDown(e, card)}
+                      onPointerMove={handlePointerMove}
                       onPointerUp={handlePointerUp}
                       onPointerCancel={handlePointerUp}
                       onContextMenu={(e) => e.preventDefault()}
@@ -330,6 +342,7 @@ export default function DeckBuilderPage() {
                 onPointerEnter={(e) => card && handlePointerEnter(e, card)}
                 onPointerLeave={handlePointerLeave}
                 onPointerDown={(e) => card && handlePointerDown(e, card)}
+                onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
                 onPointerCancel={handlePointerUp}
                 onContextMenu={(e) => e.preventDefault()}
