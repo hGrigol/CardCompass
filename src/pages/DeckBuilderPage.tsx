@@ -327,12 +327,6 @@ export default function DeckBuilderPage() {
               <div
                 key={entry.cardId}
                 className="sidebar-entry"
-                onMouseEnter={() => card && handleMouseEnter(card)}
-                onMouseLeave={() => setPreview(null)}
-                onTouchStart={() => card && handleTouchStart(card)}
-                onTouchEnd={handleTouchEnd}
-                onTouchMove={handleTouchEnd}
-                onContextMenu={(e) => e.preventDefault()}
               >
                 {card && (
                   <div className="entry-stats">
@@ -344,7 +338,15 @@ export default function DeckBuilderPage() {
                     {card.power !== null && <span className="entry-stat-power">{(card.power / 1000).toFixed(0)}k</span>}
                   </div>
                 )}
-                <div className="entry-thumb-wrap">
+                <div
+                  className="entry-thumb-wrap"
+                  onMouseEnter={() => card && handleMouseEnter(card)}
+                  onMouseLeave={() => setPreview(null)}
+                  onTouchStart={() => card && handleTouchStart(card)}
+                  onTouchEnd={handleTouchEnd}
+                  onTouchMove={handleTouchEnd}
+                  onContextMenu={(e) => e.preventDefault()}
+                >
                   {card?.imageUrl ? (
                     <img src={card.imageUrl} alt={card.name} className="entry-thumb" />
                   ) : (
@@ -358,7 +360,7 @@ export default function DeckBuilderPage() {
                   )}
                 </div>
                 <div className="entry-actions">
-                  <span className="entry-count">{entry.count}</span>
+                  <span className="entry-count">{entry.count}x</span>
                   <div className="entry-buttons">
                     <button
                       className="entry-add"
