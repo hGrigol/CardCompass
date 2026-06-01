@@ -75,14 +75,14 @@ export default function DeckBuilderPage() {
   const [preview, setPreview] = useState<Card | null>(null)
   const tabKey = `mobile_tab_${id ?? 'new'}`
   const [mobileTab, setMobileTab] = useState<'cards' | 'deck' | 'info'>(() => {
-    const saved = sessionStorage.getItem(tabKey)
+    const saved = localStorage.getItem(tabKey)
     if (saved === 'cards' || saved === 'deck' || saved === 'info') return saved
     return existingDeck?.cards.length ? 'deck' : 'cards'
   })
 
   function switchTab(tab: 'cards' | 'deck' | 'info') {
     setMobileTab(tab)
-    sessionStorage.setItem(tabKey, tab)
+    localStorage.setItem(tabKey, tab)
   }
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
