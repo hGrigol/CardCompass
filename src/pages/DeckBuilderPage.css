@@ -318,6 +318,8 @@
   border-radius: var(--radius);
   overflow: hidden;
   transition: transform 0.12s;
+  -webkit-touch-callout: none;
+  user-select: none;
 }
 
 @media (hover: hover) {

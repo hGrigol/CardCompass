@@ -83,20 +83,20 @@ export default function DeckBuilderPage() {
     setMobileTab(tab)
     window.history.replaceState(null, '', `#${tab}`)
   }
-  const touchActive = useRef(false)
-
-  function handleTouchStart(card: Card) {
-    touchActive.current = true
-    setPreview(card)
+  function handlePointerEnter(e: React.PointerEvent, card: Card) {
+    if (e.pointerType !== 'touch') setPreview(card)
   }
 
-  function handleTouchEnd() {
-    setPreview(null)
-    setTimeout(() => { touchActive.current = false }, 300)
+  function handlePointerLeave(e: React.PointerEvent) {
+    if (e.pointerType !== 'touch') setPreview(null)
   }
 
-  function handleMouseEnter(card: Card) {
-    if (!touchActive.current) setPreview(card)
+  function handlePointerDown(e: React.PointerEvent, card: Card) {
+    if (e.pointerType === 'touch') setPreview(card)
+  }
+
+  function handlePointerUp(e: React.PointerEvent) {
+    if (e.pointerType === 'touch') setPreview(null)
   }
 
   useEffect(() => {
@@ -213,11 +213,12 @@ export default function DeckBuilderPage() {
             src={leaderCard.imageUrl}
             alt={leaderCard.name}
             className="leader-panel-img"
-            onMouseEnter={() => handleMouseEnter(leaderCard)}
-            onMouseLeave={() => setPreview(null)}
-            onTouchStart={() => handleTouchStart(leaderCard)}
-            onTouchEnd={handleTouchEnd}
-            onTouchMove={handleTouchEnd}
+            onPointerEnter={(e) => handlePointerEnter(e, leaderCard)}
+            onPointerLeave={handlePointerLeave}
+            onPointerDown={(e) => handlePointerDown(e, leaderCard)}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+            onContextMenu={(e) => e.preventDefault()}
           />
         )}
         <ManaCurve entries={curveEntries} />
@@ -273,11 +274,12 @@ export default function DeckBuilderPage() {
                       key={card.id}
                       className={`card-item${maxed ? ' card-maxed' : ''}`}
                       onClick={() => !maxed && addCard(card)}
-                      onMouseEnter={() => handleMouseEnter(card)}
-                      onMouseLeave={() => setPreview(null)}
-                      onTouchStart={() => handleTouchStart(card)}
-                      onTouchEnd={handleTouchEnd}
-                      onTouchMove={handleTouchEnd}
+                      onPointerEnter={(e) => handlePointerEnter(e, card)}
+                      onPointerLeave={handlePointerLeave}
+                      onPointerDown={(e) => handlePointerDown(e, card)}
+                      onPointerUp={handlePointerUp}
+                      onPointerCancel={handlePointerUp}
+                      onContextMenu={(e) => e.preventDefault()}
                     >
                       {card.imageUrl ? (
                         <img src={card.imageUrl} alt={card.name} className="card-img" loading="lazy" />
@@ -325,11 +327,12 @@ export default function DeckBuilderPage() {
               <div
                 key={entry.cardId}
                 className="sidebar-entry"
-                onMouseEnter={() => card && handleMouseEnter(card)}
-                onMouseLeave={() => setPreview(null)}
-                onTouchStart={() => card && handleTouchStart(card)}
-                onTouchEnd={handleTouchEnd}
-                onTouchMove={handleTouchEnd}
+                onPointerEnter={(e) => card && handlePointerEnter(e, card)}
+                onPointerLeave={handlePointerLeave}
+                onPointerDown={(e) => card && handlePointerDown(e, card)}
+                onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerUp}
+                onContextMenu={(e) => e.preventDefault()}
               >
                 {card && (
                   <div className="entry-stats">
@@ -360,13 +363,13 @@ export default function DeckBuilderPage() {
                     <button
                       className="entry-add"
                       onClick={() => card && addCard(card)}
-                      onTouchStart={(e) => e.stopPropagation()}
+                      onPointerDown={(e) => e.stopPropagation()}
                       disabled={entry.count >= DECK_RULES.MAX_COPIES || cardCount >= DECK_RULES.NON_LEADER_CARDS}
                     >+</button>
                     <button
                       className="entry-remove"
                       onClick={() => removeCard(entry.cardId)}
-                      onTouchStart={(e) => e.stopPropagation()}
+                      onPointerDown={(e) => e.stopPropagation()}
                     >−</button>
                   </div>
                 </div>
