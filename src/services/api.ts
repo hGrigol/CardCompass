@@ -1,7 +1,7 @@
 import type { Card, CardCategory, CardColor } from '../types/card';
 
 const BASE = 'https://www.optcgapi.com/api';
-const CACHE_KEY = 'cardcompass_cards_v4';
+const CACHE_KEY = 'cardcompass_cards_v5';
 
 interface OptcgCard {
   card_set_id: string;
@@ -65,6 +65,12 @@ function mapCard(raw: OptcgCard): Card {
   };
 }
 
+function isAltArt(raw: OptcgCard): boolean {
+  return raw.card_name.includes('(Alternate Art)') ||
+         raw.card_name.includes('(Alt Art)') ||
+         /_(p|alt)\d*\.jpg$/i.test(raw.card_image);
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`API error ${res.status}: ${url}`);
@@ -80,17 +86,22 @@ export async function fetchAllCards(): Promise<Card[]> {
     fetchJson<OptcgCard[]>(`${BASE}/allSTCards/`),
   ]);
 
-  const seen = new Set<string>();
-  const cards: Card[] = [];
+  const seen = new Map<string, OptcgCard>();
   for (const result of results) {
     if (result.status !== 'fulfilled') continue;
     for (const raw of result.value) {
-      if (!seen.has(raw.card_set_id)) {
-        seen.add(raw.card_set_id);
-        cards.push(mapCard(raw));
+      const existing = seen.get(raw.card_set_id);
+      if (!existing) { seen.set(raw.card_set_id, raw); continue; }
+      const existingAlt = isAltArt(existing);
+      const rawAlt = isAltArt(raw);
+      // prefer base over alt art; if equal, prefer cheaper
+      if ((existingAlt && !rawAlt) ||
+          (existingAlt === rawAlt && (raw.market_price ?? Infinity) < (existing.market_price ?? Infinity))) {
+        seen.set(raw.card_set_id, raw);
       }
     }
   }
+  const cards = Array.from(seen.values()).map(mapCard);
 
   sessionStorage.setItem(CACHE_KEY, JSON.stringify(cards));
   return cards;
