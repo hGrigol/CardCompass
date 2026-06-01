@@ -323,6 +323,10 @@
   user-select: none;
 }
 
+.card-item:active {
+  outline: none;
+}
+
 @media (hover: hover) {
   .card-item:hover:not(.card-maxed) {
     transform: scale(1.05);
