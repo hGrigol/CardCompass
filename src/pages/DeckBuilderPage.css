@@ -319,6 +319,7 @@
   overflow: hidden;
   transition: transform 0.12s;
   -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
 
